@@ -1,0 +1,29 @@
+﻿@page "/"
+
+@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase
+@inject IEditInventoryUseCase EditInventoryUseCase
+
+
+<PageTitle>Home Page</PageTitle>
+
+@code {
+    private List<Inventory> _inventories = new List<Inventory>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _inventories = (await ViewInventoriesByNameUseCase.ExecuteAsync()).ToList();
+
+        var inventory = new Inventory
+            {
+                InventoryId = 1,
+                InventoryName = "Bike Frame",
+                Quantity = 9999,
+                Price = 1
+            };
+
+        await EditInventoryUseCase.ExecuteAsync(inventory);
+
+        _inventories = (await ViewInventoriesByNameUseCase.ExecuteAsync()).ToList();
+    }
+}
